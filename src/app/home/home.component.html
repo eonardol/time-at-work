@@ -1,0 +1,24 @@
+
+
+<div class="container">
+
+    <button id="add-ts-btn" type="button" class="btn btn-info btn-lg btn-block" (click)="addTimestamp()">
+      <span *ngIf="timestampList.length % 2 == 0">Enter</span>
+      <span *ngIf="timestampList.length % 2 != 0">Exit</span>
+    </button>
+    
+  <div id="result">
+    <h2 class="h4">{{timeAtWork}}</h2>
+  </div>
+  
+  <div class="ts-container" *ngFor="let t of timestampList; let i = index">
+    <!-- <div class="col-xs-6"> -->
+      <div class="input-group">
+          <input type="time" class="form-control" [(ngModel)]="t.time" (ngModelChange)="changeTimestamp($event, t)">
+          <span class="input-group-btn">
+            <button class="btn btn-secondary" type="button" (click)="deleteTimestamp(i)">Remove</button>
+          </span>
+        </div>
+    <!-- </div> -->
+  </div>
+</div>
