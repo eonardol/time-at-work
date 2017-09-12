@@ -1,16 +1,12 @@
 
 
-<div class="container">
-
-    <button id="add-ts-btn" type="button" class="btn btn-info btn-lg btn-block" (click)="addTimestamp()">
-      <span *ngIf="timestampList.length % 2 == 0">Enter</span>
-      <span *ngIf="timestampList.length % 2 != 0">Exit</span>
-    </button>
+<div id="home-component" class="container">
     
-  <div id="result">
+  <div id="result-container">
     <h2 class="h4">{{timeAtWork}}</h2>
   </div>
   
+  <div id="timestamp-container">
   <div class="ts-container" *ngFor="let t of timestampList; let i = index">
     <!-- <div class="col-xs-6"> -->
       <div class="input-group">
@@ -20,5 +16,14 @@
           </span>
         </div>
     <!-- </div> -->
+  </div>
+</div>
+
+  <div id="btn-container">
+    <button id="add-ts-btn" type="button" class="btn btn-info btn-lg btn-block" (click)="addTimestamp()">
+        Tap  
+        <span *ngIf="timestampList.length % 2 == 0">!</span>
+        <span *ngIf="timestampList.length % 2 != 0">!!</span>
+      </button>
   </div>
 </div>
