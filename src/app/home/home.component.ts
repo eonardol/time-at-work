@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {WorkingDay} from '../models/workingday';
+import {WorkingDayService} from '../services/workingday.service';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
@@ -8,11 +10,15 @@ import * as _ from 'lodash';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  timestampList: Array<any>;
-  timeAtWork: String; 
+  currentDay: string;
+  workingDay: WorkingDay
+  timeAtWork: string; 
 
-  constructor() {
-    this.timestampList = new Array();
+  constructor(private workingDayService: WorkingDayService) {
+    this.currentDay = moment().format("YYYYMMDD");
+    
+    this.workingDay = this.workingDayService.getTimestampsOfDay(this.currentDay);
+    
     this.timeAtWork = "--:--";
     setInterval(() => { this.calculateTimeAtWork() }, 499);
   }
@@ -23,30 +29,37 @@ export class HomeComponent implements OnInit {
   addTimestamp() {
     var m = moment();
 
-    this.timestampList.push({
+    this.workingDay.timestamps.push({
       "time": m.format("HH:mm"),
       "date": m
     });
     this.calculateTimeAtWork();
+    this.upateWorkingDay();
   }
 
   changeTimestamp($event, t) {
     t.date.set("hour", t.time.substring(0,2));
     t.date.set("minute", t.time.substring(3));
     this.calculateTimeAtWork();
+    this.upateWorkingDay();
   }
 
   deleteTimestamp(index) {
-    this.timestampList.splice(index, 1);
+    this.workingDay.timestamps.splice(index, 1);
     this.calculateTimeAtWork();
+    this.upateWorkingDay();
+  }
+
+  upateWorkingDay() {
+    this.workingDayService.addOrUpdate(this.workingDay);
   }
 
   calculateTimeAtWork() {
     let t1, t2 = null;
     let ms = 0;
-    for (let i = 0; i < this.timestampList.length; i = i +2 ){
-      t1 = this.timestampList[i];
-      t2 = this.timestampList[i+1];
+    for (let i = 0; i < this.workingDay.timestamps.length; i = i +2 ){
+      t1 = this.workingDay.timestamps[i];
+      t2 = this.workingDay.timestamps[i+1];
       if (t2) {
         ms += t2.date.diff(t1.date);
       } else {
@@ -62,6 +75,5 @@ export class HomeComponent implements OnInit {
     } else {
       this.timeAtWork = "--:--";
     }
-
   }
 }
